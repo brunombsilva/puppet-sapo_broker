@@ -12,7 +12,7 @@ class sapo_broker::agent(
        ./configure &&
        make &&
        make install",
-    unless => 'which thrift',
+    creates => '/usr/local/bin/thrift',
     provider => 'shell',
     timeout => 0,
     require => [Git::Repo['thrift'], Package['libboost-dev', 'libboost-test-dev', 'libboost-program-options-dev', 'libevent-dev', 'flex', 'bison', 'pkg-config', 'g++', 'libssl-dev', 'automake', 'libtool' ]]
