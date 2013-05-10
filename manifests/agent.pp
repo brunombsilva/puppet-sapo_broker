@@ -25,6 +25,7 @@ class sapo_broker::agent(
     cd $location/sapo-broker/agent &&
     ant build",
     provider => 'shell',
+    path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/usr/local/bin/" ],
     unless => "find $location/sapo-broker/agent/dist/sapo-broker-agent*",
     require => [Git::Repo['sapo_broker'], Exec['thrift'], Package['protobuf-compiler']]
   }
