@@ -9,16 +9,17 @@ class sapo_broker::php(
   exec { "sapo_broker-php":
     command => 
           "cd $location/sapo-broker/clients/c-component/libsapo-broker2 &&
-          autoreconf &&
-          automake &&
-          ./make_deb.sh &&
-          sudo dpkg -i ../libsapo-broker2_2.1.0_i386.deb &&
-          sudo dpkg -i ../libsapo-broker2-dev_2.1.0_i386.deb &&
+          sudo ./configure &&
+          sudo make &&
+          sudo make install &&
           cd $location/sapo-broker/clients/php-ext-component &&
-          sed -i 's/--only/--phpversion/g' build.sh &&
-          ./build.sh &&
-          sudo dpkg -i php5-sapobroker_0.3-1_i386.deb",
-    unless => 'php -m | grep -c sapobroker',
+          sudo phpize &&
+          sudo ./configure &&
+          sudo make &&
+          sudo make install &&
+          echo 'extension=sapobroker.so' > /etc/php5/conf.d/sapo_broker.ini &&
+          sudo ldconfig",
+    unless => 'php -m | grep sapobroker',
     provider => 'shell',
     require => [Git::Repo['sapo_broker'], Package['libprotobuf-dev', 'cdbs', 'debhelper', 'autogen', 'dh-make-php', 'xsltproc']]
   }
